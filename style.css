@@ -230,9 +230,11 @@ html, body {
 .wave.f2 { stroke: var(--f2); }
 .wave.f3 { stroke: var(--f3); }
 .wave.noise {
-  stroke: var(--noise);
-  stroke-dasharray: 3 8;
-  opacity: 0.85;
+  stroke: #c3cad3;
+  stroke-width: 1.6;
+  stroke-dasharray: 4 10;
+  opacity: 0.58;
+  animation: flow 1.4s linear infinite;
 }
 
 .flash {
@@ -242,13 +244,19 @@ html, body {
   paint-order: stroke fill;
   stroke: #07090d;
   stroke-width: 3px;
+  dominant-baseline: middle;
 }
 
 .flash.good { fill: var(--good); }
-.flash.bad { fill: var(--noise); }
+.flash.bad {
+  fill: #d0d6de;
+  font-size: 0.9rem;
+  opacity: 0.82;
+  stroke-width: 2px;
+}
 
 .flash-bg.good { fill: rgba(93, 255, 176, 0.22); }
-.flash-bg.bad { fill: rgba(255, 93, 115, 0.28); }
+.flash-bg.bad { fill: rgba(192, 200, 210, 0.18); }
 
 .pulse {
   position: absolute;
@@ -289,6 +297,12 @@ html, body {
 .swatch.wall i {
   border-radius: 3px;
   background: var(--wall);
+}
+.swatch.good i { background: var(--good); box-shadow: 0 0 8px var(--good); }
+.swatch.noise i {
+  background: #6d7886;
+  box-shadow: none;
+  opacity: 0.7;
 }
 
 .hint, .status, .note {
@@ -412,7 +426,7 @@ button.ghost {
 .chip.f3 { background: var(--f3); }
 
 .mark.good { color: var(--good); }
-.mark.bad { color: var(--noise); }
+.mark.bad { color: #8b95a3; }
 
 .dialog {
   color: var(--text);

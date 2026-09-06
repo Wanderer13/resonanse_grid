@@ -249,14 +249,15 @@
       const glow = document.createElementNS(ns, "circle");
       glow.setAttribute("cx", String(midX));
       glow.setAttribute("cy", String(midY));
-      glow.setAttribute("r", "11");
+      glow.setAttribute("r", pair.resonance ? "11" : "8");
       glow.setAttribute("class", `flash-bg ${pair.resonance ? "good" : "bad"}`);
       waveLayer.appendChild(glow);
 
       const flash = document.createElementNS(ns, "text");
       flash.setAttribute("x", String(midX));
-      flash.setAttribute("y", String(midY + 5));
+      flash.setAttribute("y", String(midY));
       flash.setAttribute("text-anchor", "middle");
+      flash.setAttribute("dominant-baseline", "middle");
       flash.setAttribute("class", `flash ${pair.resonance ? "good" : "bad"}`);
       flash.textContent = pair.resonance ? "◎" : "×";
       waveLayer.appendChild(flash);
