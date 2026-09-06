@@ -248,13 +248,17 @@
   }
 
   function spawnPulse(x, y, freq) {
-    const origin = cellCenter(x, y);
+    const cell = boardEl.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+    const wrap = boardEl.parentElement;
+    if (!cell || !wrap) return;
+    const cr = cell.getBoundingClientRect();
+    const wr = wrap.getBoundingClientRect();
     const pulse = document.createElement("div");
     pulse.className = "pulse";
-    pulse.style.left = `${origin.x}px`;
-    pulse.style.top = `${origin.y}px`;
-    pulse.style.width = `${origin.size || 56}px`;
-    pulse.style.height = `${origin.size || 56}px`;
+    pulse.style.left = `${cr.left - wr.left}px`;
+    pulse.style.top = `${cr.top - wr.top}px`;
+    pulse.style.width = `${cr.width}px`;
+    pulse.style.height = `${cr.height}px`;
     pulse.style.color = getComputedStyle(document.documentElement)
       .getPropertyValue(`--f${freq}`)
       .trim();

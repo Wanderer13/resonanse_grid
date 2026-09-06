@@ -102,12 +102,17 @@ html, body {
   min-height: 1.2em;
 }
 
+.board-scroller {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 .board-wrap {
   position: relative;
   width: max-content;
-  max-width: 100%;
   margin: 0 auto;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .board {
@@ -201,15 +206,16 @@ html, body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  overflow: visible;
 }
 
 .wave-layer {
   z-index: 1;
+  overflow: visible;
 }
 
 .pulse-layer {
   z-index: 3;
+  overflow: hidden;
 }
 
 .wave {
@@ -248,8 +254,10 @@ html, body {
   position: absolute;
   border: 2px solid currentColor;
   border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0.2);
+  transform: scale(0.2);
+  transform-origin: center;
   opacity: 0.9;
+  pointer-events: none;
   animation: pulse 0.7s ease-out forwards;
 }
 
@@ -408,7 +416,7 @@ button.ghost {
 
 @keyframes pulse {
   to {
-    transform: translate(-50%, -50%) scale(2.4);
+    transform: scale(2.4);
     opacity: 0;
   }
 }
