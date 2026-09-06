@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resonance Grid</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <p class="kicker">Логическая сеть частот</p>
+      <h1>Resonance Grid</h1>
+      <p class="pitch">
+        Расставьте башни так, чтобы совпали числа по краям.
+        Подсказки показывают <strong>резонанс</strong> — совпадение частот на линии,
+        а не сумму сигналов.
+      </p>
+    </header>
+
+    <div class="layout">
+      <section class="play" aria-label="Игровое поле">
+        <div class="toolbar">
+          <button type="button" id="rulesBtn" class="ghost">Правила</button>
+          <div class="level-nav">
+            <button type="button" id="prevBtn" class="icon-btn" aria-label="Предыдущий уровень">◀</button>
+            <span id="levelLabel">Уровень 1</span>
+            <button type="button" id="nextBtn" class="icon-btn" aria-label="Следующий уровень">▶</button>
+          </div>
+          <button type="button" id="resetBtn" class="ghost">Сброс</button>
+        </div>
+
+        <p id="levelName" class="level-name"></p>
+
+        <div class="board-wrap">
+          <div id="board" class="board"></div>
+          <svg id="waveLayer" class="wave-layer" aria-hidden="true"></svg>
+          <div id="pulseLayer" class="pulse-layer" aria-hidden="true"></div>
+        </div>
+
+        <div class="legend" aria-label="Легенда частот">
+          <span class="swatch f1"><i></i> Частота 1</span>
+          <span class="swatch f2"><i></i> Частота 2</span>
+          <span class="swatch f3"><i></i> Частота 3</span>
+          <span class="swatch wall"><i></i> Стена</span>
+        </div>
+
+        <p class="hint">Клик по клетке: пусто → 1 → 2 → 3 → пусто. Стены заданы уровнем.</p>
+
+        <div class="actions">
+          <button type="button" id="checkBtn" class="primary">Проверить</button>
+        </div>
+        <p id="status" class="status" role="status"></p>
+      </section>
+
+      <aside class="rules-panel" id="rulesPanel">
+        <h2>Как играть</h2>
+        <p>
+          Вы восстанавливаете сеть башен. Каждая башня имеет частоту
+          <span class="chip f1">1</span>
+          <span class="chip f2">2</span>
+          или
+          <span class="chip f3">3</span>
+          и шлёт волну по строке и столбцу, пока не упрётся в другую башню, стену или край.
+        </p>
+        <ul>
+          <li>
+            Если две башни видят друг друга и частоты <strong>совпали</strong> —
+            это резонанс <span class="mark good">◎</span>.
+            В подсказку строки или столбца добавляется эта частота:
+            1+1 → 1, 2+2 → 2, 3+3 → 3.
+          </li>
+          <li>
+            Если частоты <strong>разные</strong> — это шум <span class="mark bad">×</span>.
+            Вспышка есть, в число он не входит.
+          </li>
+          <li>
+            Числа сверху и слева — сумма резонансов по столбцу и строке.
+            Зелёная подсказка уже совпала.
+          </li>
+          <li>
+            Стены рвут линию видимости: волны через них не проходят.
+          </li>
+        </ul>
+        <p class="note">
+          Это не судоку и не сумма сигналов. Нужно восстановить
+          <em>отношения</em> между башнями: кто с кем резонирует.
+        </p>
+      </aside>
+    </div>
+  </div>
+
+  <dialog id="rulesDialog" class="dialog">
+    <h2>Правила Resonance Grid</h2>
+    <p>
+      Расставьте башни частот 1, 2 и 3 так, чтобы числа по краям совпали.
+      Число — это сумма резонансов на линии, а не количество башен.
+    </p>
+    <ul>
+      <li>Одинаковые частоты на линии видимости: резонанс, вклад равен частоте.</li>
+      <li>Разные частоты: шум, вклад 0.</li>
+      <li>Стена обрывает волну.</li>
+      <li>Клик циклит клетку: пусто → 1 → 2 → 3 → пусто.</li>
+    </ul>
+    <form method="dialog">
+      <button type="submit" class="primary">Понятно</button>
+    </form>
+  </dialog>
+
+  <div id="winOverlay" class="overlay hidden" role="dialog" aria-labelledby="winTitle">
+    <div class="overlay-card">
+      <p class="kicker">Сеть стабильна</p>
+      <h2 id="winTitle">Резонанс найден</h2>
+      <p id="winText">Все подсказки совпали.</p>
+      <button type="button" id="winNextBtn" class="primary">Дальше</button>
+    </div>
+  </div>
+
+  <script src="levels.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
