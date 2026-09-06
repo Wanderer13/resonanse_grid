@@ -7,6 +7,9 @@
   const statusEl = document.getElementById("status");
   const winOverlay = document.getElementById("winOverlay");
   const winText = document.getElementById("winText");
+  const continueBtn = document.getElementById("continueBtn");
+  const checkBtn = document.getElementById("checkBtn");
+  const hintBtn = document.getElementById("hintBtn");
   const rulesDialog = document.getElementById("rulesDialog");
 
   let levelIndex = 0;
@@ -14,7 +17,9 @@
   let walls = new Set();
   let grid = [];
   let target = { rows: [], cols: [] };
-  let won = false;
+  let solution = [];
+  let locked = new Set();
+  let solved = false;
 
   function key(x, y) {
     return `${x},${y}`;
@@ -136,6 +141,12 @@
     return freq ? `freq-${freq}` : "";
   }
 
+  function setSolvedUi(isSolved) {
+    continueBtn.classList.toggle("hidden", !isSolved);
+    checkBtn.disabled = isSolved;
+    hintBtn.disabled = isSolved;
+  }
+
   function render() {
     const current = analyze(grid, walls, size);
     const matched = cluesMatch(current);
@@ -164,7 +175,8 @@
         cell.type = "button";
         const wall = isWall(x, y);
         const freq = grid[y][x];
-        cell.className = `cell ${wall ? "wall" : "playable"} ${freqClass(freq)}`;
+        const isLocked = locked.has(key(x, y));
+        cell.className = `cell ${wall ? "wall" : "playable"} ${freqClass(freq)}${isLocked ? " locked" : ""}`;
         cell.disabled = wall;
         cell.dataset.x = String(x);
         cell.dataset.y = String(y);
@@ -177,7 +189,14 @@
           mark.className = "tower";
           mark.textContent = freq ? String(freq) : "";
           cell.appendChild(mark);
-          cell.setAttribute("aria-label", freq ? `Башня частоты ${freq}` : "Пустая клетка");
+          if (isLocked) {
+            cell.setAttribute(
+              "aria-label",
+              freq ? `Подсказка: башня частоты ${freq}` : "Подсказка: пустая клетка"
+            );
+          } else {
+            cell.setAttribute("aria-label", freq ? `Башня частоты ${freq}` : "Пустая клетка");
+          }
           cell.addEventListener("click", () => onCellClick(x, y));
         }
 
@@ -189,12 +208,16 @@
     levelLabel.textContent = `Уровень ${levelIndex + 1} / ${LEVELS.length}`;
     levelName.textContent = LEVELS[levelIndex].name;
 
-    if (matched && !won) {
-      won = true;
-      statusEl.className = "status good";
-      statusEl.textContent = "Все подсказки совпали.";
-      winText.textContent = `Уровень «${LEVELS[levelIndex].name}» собран.`;
-      winOverlay.classList.remove("hidden");
+    if (matched) {
+      if (!solved) {
+        solved = true;
+        statusEl.className = "status good";
+        statusEl.textContent = "Все подсказки совпали. Можно продолжить.";
+      }
+      setSolvedUi(true);
+    } else {
+      solved = false;
+      setSolvedUi(false);
     }
 
     return current;
@@ -267,7 +290,7 @@
   }
 
   function onCellClick(x, y) {
-    if (won) return;
+    if (solved || locked.has(key(x, y))) return;
     grid[y][x] = (grid[y][x] + 1) % 4;
     const freq = grid[y][x];
     statusEl.className = "status";
@@ -282,8 +305,11 @@
     size = level.size;
     walls = wallSetFrom(level);
     grid = emptyGrid(size);
-    target = analyze(level.solution, walls, size);
-    won = false;
+    solution = level.solution.map((row) => row.slice());
+    locked = new Set();
+    target = analyze(solution, walls, size);
+    solved = false;
+    setSolvedUi(false);
     winOverlay.classList.add("hidden");
     statusEl.className = "status";
     statusEl.textContent = "";
@@ -315,8 +341,8 @@
 
     if (!any) {
       statusEl.className = "status good";
-      statusEl.textContent = "Все подсказки совпали.";
-      if (!won) render();
+      statusEl.textContent = "Все подсказки совпали. Можно продолжить.";
+      setSolvedUi(true);
       return;
     }
 
@@ -333,7 +359,48 @@
   document.getElementById("resetBtn").addEventListener("click", () => {
     loadLevel(levelIndex);
   });
+  function applyHint() {
+    if (solved) return;
+
+    const mismatches = [];
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        if (isWall(x, y) || locked.has(key(x, y))) continue;
+        const want = solution[y][x];
+        if (grid[y][x] === want) continue;
+        mismatches.push({
+          x,
+          y,
+          want,
+          priority: want ? 0 : 1
+        });
+      }
+    }
+
+    if (!mismatches.length) {
+      statusEl.className = "status good";
+      statusEl.textContent = "Все открываемые клетки уже на своих местах.";
+      return;
+    }
+
+    mismatches.sort((a, b) => a.priority - b.priority);
+    const pick = mismatches[0];
+    grid[pick.y][pick.x] = pick.want;
+    locked.add(key(pick.x, pick.y));
+    statusEl.className = "status good";
+    statusEl.textContent = pick.want
+      ? `Подсказка: башня частоты ${pick.want}.`
+      : "Подсказка: эта клетка должна быть пустой.";
+    render();
+    if (pick.want) spawnPulse(pick.x, pick.y, pick.want);
+  }
+
   document.getElementById("checkBtn").addEventListener("click", showMismatches);
+  document.getElementById("hintBtn").addEventListener("click", applyHint);
+  document.getElementById("continueBtn").addEventListener("click", () => {
+    winText.textContent = `Уровень «${LEVELS[levelIndex].name}» собран.`;
+    winOverlay.classList.remove("hidden");
+  });
   document.getElementById("rulesBtn").addEventListener("click", () => {
     rulesDialog.showModal();
   });

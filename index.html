@@ -51,6 +51,8 @@
 
         <div class="actions">
           <button type="button" id="checkBtn" class="primary">Проверить</button>
+          <button type="button" id="hintBtn" class="ghost">Подсказка</button>
+          <button type="button" id="continueBtn" class="accent hidden">Продолжить</button>
         </div>
         <p id="status" class="status" role="status"></p>
       </section>
@@ -83,6 +85,9 @@
           <li>
             Стены рвут линию видимости: волны через них не проходят.
           </li>
+          <li>
+            «Подсказка» открывает одну клетку из решения и фиксирует её.
+          </li>
         </ul>
         <p class="note">
           Это не судоку и не сумма сигналов. Нужно восстановить
@@ -103,6 +108,7 @@
       <li>Разные частоты: шум, вклад 0.</li>
       <li>Стена обрывает волну.</li>
       <li>Клик циклит клетку: пусто → 1 → 2 → 3 → пусто.</li>
+      <li>Кнопка «Подсказка» открывает одну клетку из решения.</li>
     </ul>
     <form method="dialog">
       <button type="submit" class="primary">Понятно</button>

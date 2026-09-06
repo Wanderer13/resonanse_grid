@@ -306,7 +306,20 @@ html, body {
 .status.bad { color: var(--noise); }
 
 .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 8px;
+}
+
+.cell.locked {
+  outline: 2px solid rgba(93, 255, 176, 0.85);
+  outline-offset: -3px;
+  cursor: default;
+}
+
+.cell.locked.playable:hover {
+  border-color: inherit;
 }
 
 button {
@@ -328,6 +341,32 @@ button.primary {
   border-color: #4aa0ff;
   padding: 10px 18px;
   font-weight: 700;
+}
+
+button.accent {
+  background: linear-gradient(180deg, #5dffb0, #1fb87a);
+  border-color: #8dffc8;
+  color: #062016;
+  padding: 10px 18px;
+  font-weight: 700;
+  box-shadow: 0 0 22px rgba(93, 255, 176, 0.4);
+}
+
+button.accent:hover {
+  border-color: #b6ffdd;
+}
+
+button:disabled {
+  background: #1a222c;
+  border-color: #2a3545;
+  color: #6d7a8b;
+  cursor: default;
+  box-shadow: none;
+  opacity: 0.55;
+}
+
+button:disabled:hover {
+  border-color: #2a3545;
 }
 
 button.ghost {
@@ -396,8 +435,9 @@ button.ghost {
   padding: 20px;
 }
 
-.overlay.hidden {
-  display: none;
+.overlay.hidden,
+.hidden {
+  display: none !important;
 }
 
 .overlay-card {
