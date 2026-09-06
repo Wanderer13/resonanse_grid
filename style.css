@@ -140,13 +140,14 @@ html, body {
 }
 
 .clue {
-  background: transparent;
-  color: var(--muted);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f4f7fb;
   font-weight: 700;
   font-size: 1.05rem;
 }
 
 .clue.match {
+  background: transparent;
   color: var(--good);
   text-shadow: 0 0 12px rgba(93, 255, 176, 0.45);
 }
@@ -232,9 +233,8 @@ html, body {
 .wave.noise {
   stroke: #c3cad3;
   stroke-width: 1.6;
-  stroke-dasharray: 4 10;
   opacity: 0.58;
-  animation: flow 1.4s linear infinite;
+  animation-duration: 5.5s;
 }
 
 .flash {
