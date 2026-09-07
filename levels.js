@@ -1,6 +1,6 @@
 const LEVELS = [
   {
-    name: "Первый резонанс",
+    name: "Первая дружба",
     size: 4,
     walls: [],
     solution: [
@@ -11,7 +11,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Две частоты",
+    name: "Два роста",
     size: 4,
     walls: [],
     solution: [
@@ -22,7 +22,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Угол",
+    name: "Уголок",
     size: 4,
     walls: [],
     solution: [
@@ -57,7 +57,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Стена на линии",
+    name: "Дерево на тропе",
     size: 5,
     walls: [{ x: 2, y: 0 }],
     solution: [
@@ -69,7 +69,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Разорванный луч",
+    name: "Спрятанный взгляд",
     size: 5,
     walls: [{ x: 2, y: 1 }, { x: 2, y: 3 }],
     solution: [
@@ -81,7 +81,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Три ноты",
+    name: "Три роста",
     size: 6,
     walls: [{ x: 2, y: 1 }],
     solution: [
@@ -94,7 +94,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Камеры",
+    name: "Полянки",
     size: 6,
     walls: [{ x: 2, y: 2 }, { x: 3, y: 2 }],
     solution: [
@@ -107,7 +107,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Длинная ось",
+    name: "Длинная тропа",
     size: 7,
     walls: [{ x: 3, y: 1 }, { x: 3, y: 5 }],
     solution: [
@@ -121,7 +121,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Перекрёсток",
+    name: "Перекрёсток троп",
     size: 7,
     walls: [{ x: 3, y: 3 }, { x: 1, y: 1 }, { x: 5, y: 5 }],
     solution: [
@@ -135,7 +135,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Планета сигналов",
+    name: "Большая поляна",
     size: 8,
     walls: [
       { x: 3, y: 2 },

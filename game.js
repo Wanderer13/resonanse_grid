@@ -182,20 +182,28 @@
         cell.dataset.y = String(y);
 
         if (wall) {
-          cell.textContent = "■";
-          cell.setAttribute("aria-label", "Стена");
+          cell.textContent = "🌳";
+          cell.setAttribute("aria-label", "Дерево");
         } else {
           const mark = document.createElement("span");
-          mark.className = "tower";
-          mark.textContent = freq ? String(freq) : "";
+          mark.className = "giraffe" + (freq ? ` size-${freq}` : "");
+          if (freq) {
+            const icon = document.createElement("span");
+            icon.className = "giraffe-icon";
+            icon.textContent = "🦒";
+            const num = document.createElement("span");
+            num.className = "giraffe-num";
+            num.textContent = String(freq);
+            mark.append(icon, num);
+          }
           cell.appendChild(mark);
           if (isLocked) {
             cell.setAttribute(
               "aria-label",
-              freq ? `Подсказка: башня частоты ${freq}` : "Подсказка: пустая клетка"
+              freq ? `Подсказка: жираф роста ${freq}` : "Подсказка: пустая клетка"
             );
           } else {
-            cell.setAttribute("aria-label", freq ? `Башня частоты ${freq}` : "Пустая клетка");
+            cell.setAttribute("aria-label", freq ? `Жираф роста ${freq}` : "Пустая клетка");
           }
           cell.addEventListener("click", () => onCellClick(x, y));
         }
@@ -212,7 +220,7 @@
       if (!solved) {
         solved = true;
         statusEl.className = "status good";
-        statusEl.textContent = "Все подсказки совпали. Можно продолжить.";
+        statusEl.textContent = "Все подсказки совпали. Можно идти дальше.";
       }
       setSolvedUi(true);
     } else {
@@ -259,7 +267,7 @@
       flash.setAttribute("text-anchor", "middle");
       flash.setAttribute("dominant-baseline", "middle");
       flash.setAttribute("class", `flash ${pair.resonance ? "good" : "bad"}`);
-      flash.textContent = pair.resonance ? "◎" : "×";
+      flash.textContent = pair.resonance ? "♥" : "~";
       waveLayer.appendChild(flash);
     }
 
@@ -342,13 +350,13 @@
 
     if (!any) {
       statusEl.className = "status good";
-      statusEl.textContent = "Все подсказки совпали. Можно продолжить.";
+      statusEl.textContent = "Все подсказки совпали. Можно идти дальше.";
       setSolvedUi(true);
       return;
     }
 
     statusEl.className = "status bad";
-    statusEl.textContent = "Резонанс ещё не сошёлся: красные числа не совпали.";
+    statusEl.textContent = "Дружба ещё не сошлась: эти числа не совпали.";
   }
 
   document.getElementById("prevBtn").addEventListener("click", () => {
@@ -390,7 +398,7 @@
     locked.add(key(pick.x, pick.y));
     statusEl.className = "status good";
     statusEl.textContent = pick.want
-      ? `Подсказка: башня частоты ${pick.want}.`
+      ? `Подсказка: жираф роста ${pick.want}.`
       : "Подсказка: эта клетка должна быть пустой.";
     render();
     if (pick.want) spawnPulse(pick.x, pick.y, pick.want);
@@ -399,7 +407,7 @@
   document.getElementById("checkBtn").addEventListener("click", showMismatches);
   document.getElementById("hintBtn").addEventListener("click", applyHint);
   document.getElementById("continueBtn").addEventListener("click", () => {
-    winText.textContent = `Уровень «${LEVELS[levelIndex].name}» собран.`;
+    winText.textContent = `Уровень «${LEVELS[levelIndex].name}» собран. Жирафы довольны.`;
     winOverlay.classList.remove("hidden");
   });
   document.getElementById("rulesBtn").addEventListener("click", () => {
@@ -409,7 +417,7 @@
     if (levelIndex === LEVELS.length - 1) {
       winOverlay.classList.add("hidden");
       statusEl.className = "status good";
-      statusEl.textContent = "Все уровни пройдены.";
+      statusEl.textContent = "Вся поляна собрана. Жирафы счастливы.";
       return;
     }
     loadLevel(levelIndex + 1);

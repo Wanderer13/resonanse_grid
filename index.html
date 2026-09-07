@@ -3,30 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Resonance Grid</title>
+  <title>Поляна жирафов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
     <header class="hero">
-      <p class="kicker">Логическая сеть частот</p>
-      <h1>Resonance Grid</h1>
+      <p class="kicker">Милый логический пазл</p>
+      <h1>Поляна жирафов</h1>
       <p class="pitch">
-        Расставьте башни так, чтобы совпали числа по краям.
-        Число — это резонанс <strong>двух</strong> башен одной частоты, а не количество клеток.
+        Расставьте жирафов так, чтобы совпали числа по краям.
+        Число — это дружба <strong>двух</strong> жирафов одного роста, а не количество клеток.
       </p>
     </header>
 
     <div class="layout">
       <section class="play" aria-label="Игровое поле">
         <div class="toolbar">
-          <button type="button" id="rulesBtn" class="ghost">Правила</button>
+          <button type="button" id="rulesBtn" class="ghost">Как играть</button>
           <div class="level-nav">
             <button type="button" id="prevBtn" class="icon-btn" aria-label="Предыдущий уровень">◀</button>
             <span id="levelLabel">Уровень 1</span>
             <button type="button" id="nextBtn" class="icon-btn" aria-label="Следующий уровень">▶</button>
           </div>
-          <button type="button" id="resetBtn" class="ghost">Сброс</button>
+          <button type="button" id="resetBtn" class="ghost">Заново</button>
         </div>
 
         <p id="levelName" class="level-name"></p>
@@ -39,25 +42,25 @@
           </div>
         </div>
 
-        <div class="legend" aria-label="Легенда частот">
-          <span class="swatch f1"><i></i> Частота 1</span>
-          <span class="swatch f2"><i></i> Частота 2</span>
-          <span class="swatch f3"><i></i> Частота 3</span>
-          <span class="swatch wall"><i></i> Стена</span>
-          <span class="swatch good"><i></i> Резонанс ◎</span>
-          <span class="swatch noise"><i></i> Шум ×</span>
+        <div class="legend" aria-label="Легенда роста">
+          <span class="swatch f1"><i></i> Рост 1</span>
+          <span class="swatch f2"><i></i> Рост 2</span>
+          <span class="swatch f3"><i></i> Рост 3</span>
+          <span class="swatch wall"><i></i> Дерево</span>
+          <span class="swatch good"><i></i> Дружба ♥</span>
+          <span class="swatch noise"><i></i> Растерянность ~</span>
         </div>
 
         <p class="hint">
           Клик: пусто → 1 → 2 → 3 → пусто.
-          Число 3 на краю — это две башни частоты 3, а не три тройки.
-          Серый путь и × — шум, не ошибка.
+          Число 3 на краю — это два жирафа роста 3, а не три тройки.
+          Мягкий путь и ~ — растерянность, не ошибка.
         </p>
 
         <div class="actions">
           <button type="button" id="checkBtn" class="primary">Проверить</button>
           <button type="button" id="hintBtn" class="ghost">Подсказка</button>
-          <button type="button" id="continueBtn" class="accent hidden">Продолжить</button>
+          <button type="button" id="continueBtn" class="accent hidden">Дальше гулять</button>
         </div>
         <p id="status" class="status" role="status"></p>
       </section>
@@ -65,66 +68,66 @@
       <aside class="rules-panel" id="rulesPanel">
         <h2>Как играть</h2>
         <p>
-          Вы восстанавливаете сеть башен. Каждая башня имеет частоту
+          Вы собираете стадо на поляне. У каждого жирафа свой рост
           <span class="chip f1">1</span>
           <span class="chip f2">2</span>
           или
           <span class="chip f3">3</span>
-          и шлёт волну по строке и столбцу, пока не упрётся в другую башню, стену или край.
+          и взгляд идёт по строке и столбцу, пока не упрётся в другого жирафа, дерево или край.
         </p>
         <ul>
           <li>
-            Резонанс даёт <strong>ровно две</strong> башни одной частоты, которые видят друг друга.
-            В число добавляется эта частота: две единицы → 1, две двойки → 2, две тройки → 3.
+            Дружбу дают <strong>ровно два</strong> жирафа одного роста, которые видят друг друга.
+            В число добавляется этот рост: две единицы → 1, две двойки → 2, две тройки → 3.
             Три тройки на одной линии — это уже две пары и сумма 6, а не 3.
           </li>
           <li>
-            Если две башни видят друг друга, но частоты <strong>разные</strong> —
-            это шум <span class="mark bad">×</span>.
-            Серый путь не ошибка: шум в число не входит.
+            Если два жирафа видят друг друга, но рост <strong>разный</strong> —
+            это растерянность <span class="mark bad">~</span>.
+            Мягкий путь не ошибка: растерянность в число не входит.
           </li>
           <li>
-            Числа сверху и слева — сумма резонансов по столбцу и строке.
-            Зелёная подсказка уже совпала.
+            Числа сверху и слева — сумма дружбы по столбцу и строке.
+            Розовая подсказка уже совпала.
           </li>
           <li>
-            Стены рвут линию видимости: волны через них не проходят.
+            Деревья рвут линию взгляда: через них жирафы не видят друг друга.
           </li>
           <li>
             «Подсказка» открывает одну клетку из решения и фиксирует её.
           </li>
         </ul>
         <p class="note">
-          Это не судоку и не сумма сигналов. Нужно восстановить
-          <em>отношения</em> между башнями: кто с кем резонирует.
+          Это не судоку и не подсчёт жирафов. Нужно понять
+          <em>кто на кого смотрит</em>: кто с кем дружит.
         </p>
       </aside>
     </div>
   </div>
 
   <dialog id="rulesDialog" class="dialog">
-    <h2>Правила Resonance Grid</h2>
+    <h2>Правила поляны</h2>
     <p>
-      Расставьте башни частот 1, 2 и 3 так, чтобы числа по краям совпали.
-      Число — сумма резонансов пар на линии, а не количество башен.
+      Расставьте жирафов роста 1, 2 и 3 так, чтобы числа по краям совпали.
+      Число — сумма дружбы пар на линии, а не количество жирафов.
       Две тройки дают 3; три тройки дают 6.
     </p>
     <ul>
-      <li>Две одинаковые частоты на линии видимости: резонанс, вклад равен частоте.</li>
-      <li>Разные частоты: шум ×. Это не ошибка, в число не входит.</li>
-      <li>Стена обрывает волну.</li>
+      <li>Два одинаковых роста на линии взгляда: дружба, вклад равен росту.</li>
+      <li>Разный рост: растерянность ~. Это не ошибка, в число не входит.</li>
+      <li>Дерево обрывает взгляд.</li>
       <li>Клик циклит клетку: пусто → 1 → 2 → 3 → пусто.</li>
       <li>Кнопка «Подсказка» открывает одну клетку из решения.</li>
     </ul>
     <form method="dialog">
-      <button type="submit" class="primary">Понятно</button>
+      <button type="submit" class="primary">Понятно!</button>
     </form>
   </dialog>
 
   <div id="winOverlay" class="overlay hidden" role="dialog" aria-labelledby="winTitle">
     <div class="overlay-card">
-      <p class="kicker">Сеть стабильна</p>
-      <h2 id="winTitle">Резонанс найден</h2>
+      <p class="kicker">Все смотрят куда надо</p>
+      <h2 id="winTitle">Жирафы подружились</h2>
       <p id="winText">Все подсказки совпали.</p>
       <button type="button" id="winNextBtn" class="primary">Дальше</button>
     </div>
