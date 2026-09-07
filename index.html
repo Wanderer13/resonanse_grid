@@ -42,20 +42,16 @@
           </div>
         </div>
 
-        <div class="legend" aria-label="Легенда роста">
-          <span class="swatch f1"><i></i> Рост 1</span>
-          <span class="swatch f2"><i></i> Рост 2</span>
-          <span class="swatch f3"><i></i> Рост 3</span>
-          <span class="swatch wall"><i></i> Дерево</span>
-          <span class="swatch good"><i></i> Дружба ♥</span>
-          <span class="swatch noise"><i></i> Растерянность ~</span>
-        </div>
+        <p id="coach" class="coach" role="status"></p>
 
-        <p class="hint">
-          Клик: пусто → 1 → 2 → 3 → пусто.
-          Число 3 на краю — это два жирафа роста 3, а не три тройки.
-          Мягкий путь и ~ — растерянность, не ошибка.
-        </p>
+        <div class="legend" id="legend" aria-label="Легенда роста">
+          <span class="swatch f1" data-legend="f1"><i></i> Рост 1</span>
+          <span class="swatch f2" data-legend="f2"><i></i> Рост 2</span>
+          <span class="swatch f3" data-legend="f3"><i></i> Рост 3</span>
+          <span class="swatch wall" data-legend="wall"><i></i> Дерево</span>
+          <span class="swatch good" data-legend="good"><i></i> Дружба ♥</span>
+          <span class="swatch noise" data-legend="noise"><i></i> Растерянность ~</span>
+        </div>
 
         <div class="actions">
           <button type="button" id="checkBtn" class="primary">Проверить</button>
@@ -64,51 +60,48 @@
         </div>
         <p id="status" class="status" role="status"></p>
       </section>
-
-      <aside class="rules-panel" id="rulesPanel">
-        <h2>Как играть</h2>
-        <p>
-          Вы собираете стадо на поляне. У каждого жирафа свой рост
-          <span class="chip f1">1</span>
-          <span class="chip f2">2</span>
-          или
-          <span class="chip f3">3</span>
-          и взгляд идёт по строке и столбцу, пока не упрётся в другого жирафа, дерево или край.
-        </p>
-        <ul>
-          <li>
-            Дружбу дают <strong>ровно два</strong> жирафа одного роста, которые видят друг друга.
-            В число добавляется этот рост: две единицы → 1, две двойки → 2, две тройки → 3.
-            Три тройки на одной линии — это уже две пары и сумма 6, а не 3.
-          </li>
-          <li>
-            Если два жирафа видят друг друга, но рост <strong>разный</strong> —
-            это растерянность <span class="mark bad">~</span>.
-            Мягкий путь не ошибка: растерянность в число не входит.
-          </li>
-          <li>
-            Числа сверху и слева — сумма дружбы по столбцу и строке.
-            Розовая подсказка уже совпала.
-          </li>
-          <li>
-            Деревья рвут линию взгляда: через них жирафы не видят друг друга.
-          </li>
-          <li>
-            «Подсказка» открывает одну клетку из решения и фиксирует её.
-          </li>
-        </ul>
-        <p class="note">
-          Это не судоку и не подсчёт жирафов. Нужно понять
-          <em>кто на кого смотрит</em>: кто с кем дружит.
-        </p>
-      </aside>
     </div>
   </div>
+
+  <dialog id="welcomeDialog" class="dialog welcome-dialog">
+    <p class="kicker">Как найти дружбу</p>
+    <h2>Смотрите, кто на кого смотрит</h2>
+    <div class="welcome-demo" aria-hidden="true">
+      <div class="welcome-board">
+        <div class="clue match"><span class="clue-target">1</span></div>
+        <div class="welcome-stack">
+          <div class="cell playable freq-1">
+            <span class="giraffe size-1">
+              <span class="giraffe-icon">🦒</span>
+              <span class="giraffe-num">1</span>
+            </span>
+          </div>
+          <div class="cell playable freq-1">
+            <span class="giraffe size-1">
+              <span class="giraffe-icon">🦒</span>
+              <span class="giraffe-num">1</span>
+            </span>
+          </div>
+          <div class="welcome-link">
+            <span class="welcome-wave"></span>
+            <span class="welcome-heart">♥</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p>
+      Два одинаковых жирафа видят друг друга — это дружба.
+      Число на краю — сила пары, не количество клеток.
+    </p>
+    <form method="dialog">
+      <button type="submit" class="primary" autofocus>На поляну</button>
+    </form>
+  </dialog>
 
   <dialog id="rulesDialog" class="dialog">
     <h2>Правила поляны</h2>
     <p>
-      Расставьте жирафов роста 1, 2 и 3 так, чтобы числа по краям совпали.
+      Расставьте жирафов роста 1, 2 и 3 так, чтобы совпали числа по краям.
       Число — сумма дружбы пар на линии, а не количество жирафов.
       Две тройки дают 3; три тройки дают 6.
     </p>

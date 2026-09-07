@@ -4,6 +4,8 @@
   const pulseLayer = document.getElementById("pulseLayer");
   const levelLabel = document.getElementById("levelLabel");
   const levelName = document.getElementById("levelName");
+  const coachEl = document.getElementById("coach");
+  const legendEl = document.getElementById("legend");
   const statusEl = document.getElementById("status");
   const winOverlay = document.getElementById("winOverlay");
   const winText = document.getElementById("winText");
@@ -11,6 +13,7 @@
   const checkBtn = document.getElementById("checkBtn");
   const hintBtn = document.getElementById("hintBtn");
   const rulesDialog = document.getElementById("rulesDialog");
+  const welcomeDialog = document.getElementById("welcomeDialog");
 
   let levelIndex = 0;
   let size = 0;
@@ -20,6 +23,8 @@
   let solution = [];
   let locked = new Set();
   let solved = false;
+  let maxFreq = 3;
+  let prevScores = null;
 
   function key(x, y) {
     return `${x},${y}`;
@@ -35,6 +40,16 @@
 
   function wallSetFrom(level) {
     return new Set((level.walls || []).map(({ x, y }) => key(x, y)));
+  }
+
+  function giraffeCount(source) {
+    let n = 0;
+    source.forEach((row) => {
+      row.forEach((value) => {
+        if (value) n += 1;
+      });
+    });
+    return n;
   }
 
   function lineInteractions(cells) {
@@ -124,6 +139,20 @@
     );
   }
 
+  function uniqueUnmatchedLine(current) {
+    const cols = [];
+    const rows = [];
+    current.cols.forEach((value, i) => {
+      if (value !== target.cols[i]) cols.push(i);
+    });
+    current.rows.forEach((value, i) => {
+      if (value !== target.rows[i]) rows.push(i);
+    });
+    if (cols.length === 1 && rows.length === 0) return { type: "col", index: cols[0] };
+    if (rows.length === 1 && cols.length === 0) return { type: "row", index: rows[0] };
+    return null;
+  }
+
   function cellCenter(x, y) {
     const cell = boardEl.querySelector(`[data-x="${x}"][data-y="${y}"]`);
     const wrap = boardEl.parentElement;
@@ -131,8 +160,8 @@
     const cr = cell.getBoundingClientRect();
     const wr = wrap.getBoundingClientRect();
     return {
-      x: cr.left - wr.left + cr.width / 2,
-      y: cr.top - wr.top + cr.height / 2,
+      x: Math.round(cr.left - wr.left + cr.width / 2),
+      y: Math.round(cr.top - wr.top + cr.height / 2),
       size: cr.width
     };
   }
@@ -147,9 +176,87 @@
     hintBtn.disabled = isSolved;
   }
 
+  function clickHint(level) {
+    const cap = level.maxFreq || 3;
+    if (cap <= 1) return "Клик ставит или убирает жирафа роста 1.";
+    if (cap === 2) return "Клик: пусто → 1 → 2 → пусто.";
+    return "Клик: пусто → 1 → 2 → 3 → пусто.";
+  }
+
+  function fillClue(el, currentValue, targetValue, { bump = false, focus = false } = {}) {
+    const match = currentValue === targetValue;
+    el.className = "clue" + (match ? " match" : " pending");
+    if (focus) el.classList.add("line-focus");
+    el.setAttribute(
+      "aria-label",
+      match
+        ? `Подсказка ${targetValue}, совпала`
+        : `Подсказка ${targetValue}, сейчас ${currentValue}`
+    );
+
+    const targetSpan = document.createElement("span");
+    targetSpan.className = "clue-target";
+    targetSpan.textContent = String(targetValue);
+    el.appendChild(targetSpan);
+
+    if (!match) {
+      const now = document.createElement("span");
+      now.className = "clue-now";
+      now.textContent = `сейчас ${currentValue}`;
+      el.appendChild(now);
+    }
+
+    if (bump) {
+      el.classList.add("bump");
+      el.addEventListener("animationend", () => el.classList.remove("bump"), { once: true });
+    }
+  }
+
+  function updateLegend(level) {
+    const cap = level.maxFreq || 3;
+    const hasWalls = (level.walls || []).length > 0;
+    legendEl.querySelector('[data-legend="f1"]').classList.toggle("hidden", cap < 1);
+    legendEl.querySelector('[data-legend="f2"]').classList.toggle("hidden", cap < 2);
+    legendEl.querySelector('[data-legend="f3"]').classList.toggle("hidden", cap < 3);
+    legendEl.querySelector('[data-legend="wall"]').classList.toggle("hidden", !hasWalls);
+    legendEl.querySelector('[data-legend="good"]').classList.remove("hidden");
+    legendEl.querySelector('[data-legend="noise"]').classList.toggle("hidden", cap < 2);
+  }
+
+  function updateCoach(current) {
+    const level = LEVELS[levelIndex];
+    const matched = cluesMatch(current);
+    let text = level.coach || clickHint(level);
+
+    if (matched) {
+      text = "Все смотрят куда надо.";
+    } else if (level.tutorial) {
+      const pairs = [...current.rowPairs, ...current.colPairs];
+      const harmfulNoise = pairs.some((pair) => {
+        if (pair.resonance) return false;
+        const lineTarget = "x1" in pair ? target.rows[pair.y] : target.cols[pair.x];
+        return lineTarget > 0;
+      });
+      const friends = pairs.some((pair) => pair.resonance);
+      const extras = giraffeCount(grid) > giraffeCount(solution);
+      if (harmfulNoise) {
+        text = "~ это растерянность, в число не входит. Нужен такой же рост.";
+      } else if (friends && extras) {
+        text = "Лишние тоже смотрят. Уберите их.";
+      } else if (friends && level.coachAfterPair) {
+        text = level.coachAfterPair;
+      }
+    }
+
+    coachEl.textContent = text;
+    coachEl.className = "coach" + (matched ? " good" : "");
+  }
+
   function render() {
     const current = analyze(grid, walls, size);
     const matched = cluesMatch(current);
+    const level = LEVELS[levelIndex];
+    const focus = level.tutorial ? uniqueUnmatchedLine(current) : null;
 
     boardEl.style.gridTemplateColumns = `var(--cell-size, 56px) repeat(${size}, var(--cell-size, 56px))`;
     boardEl.replaceChildren();
@@ -159,15 +266,19 @@
 
     for (let x = 0; x < size; x++) {
       const clue = document.createElement("div");
-      clue.className = "clue" + (current.cols[x] === target.cols[x] ? " match" : "");
-      clue.textContent = target.cols[x];
+      const isFocus = focus && focus.type === "col" && focus.index === x;
+      const bump = Boolean(prevScores && prevScores.cols[x] !== current.cols[x]);
+      fillClue(clue, current.cols[x], target.cols[x], { bump, focus: isFocus });
+      clue.dataset.col = String(x);
       boardEl.appendChild(clue);
     }
 
     for (let y = 0; y < size; y++) {
       const rowClue = document.createElement("div");
-      rowClue.className = "clue" + (current.rows[y] === target.rows[y] ? " match" : "");
-      rowClue.textContent = target.rows[y];
+      const isFocus = focus && focus.type === "row" && focus.index === y;
+      const bump = Boolean(prevScores && prevScores.rows[y] !== current.rows[y]);
+      fillClue(rowClue, current.rows[y], target.rows[y], { bump, focus: isFocus });
+      rowClue.dataset.row = String(y);
       boardEl.appendChild(rowClue);
 
       for (let x = 0; x < size; x++) {
@@ -176,7 +287,10 @@
         const wall = isWall(x, y);
         const freq = grid[y][x];
         const isLocked = locked.has(key(x, y));
-        cell.className = `cell ${wall ? "wall" : "playable"} ${freqClass(freq)}${isLocked ? " locked" : ""}`;
+        const lineFocus =
+          (focus && focus.type === "col" && x === focus.index) ||
+          (focus && focus.type === "row" && y === focus.index);
+        cell.className = `cell ${wall ? "wall" : "playable"} ${freqClass(freq)}${isLocked ? " locked" : ""}${lineFocus ? " line-focus" : ""}`;
         cell.disabled = wall;
         cell.dataset.x = String(x);
         cell.dataset.y = String(y);
@@ -214,7 +328,10 @@
 
     drawWaves(current);
     levelLabel.textContent = `Уровень ${levelIndex + 1} / ${LEVELS.length}`;
-    levelName.textContent = LEVELS[levelIndex].name;
+    levelName.textContent = level.name;
+    updateLegend(level);
+    updateCoach(current);
+    prevScores = { rows: current.rows.slice(), cols: current.cols.slice() };
 
     if (matched) {
       if (!solved) {
@@ -231,52 +348,112 @@
     return current;
   }
 
+  const WAVE_DASH = 20;
+  const WAVE_SPEED = 20;
+  let waveRaf = 0;
+
+  function waveDashOffset() {
+    return -((performance.now() / 1000) * WAVE_SPEED % WAVE_DASH);
+  }
+
+  function applyWaveOffset() {
+    waveLayer.style.setProperty("--wave-offset", `${waveDashOffset()}px`);
+  }
+
+  function startWaveClock() {
+    if (waveRaf) return;
+    const tick = () => {
+      applyWaveOffset();
+      waveRaf = requestAnimationFrame(tick);
+    };
+    waveRaf = requestAnimationFrame(tick);
+  }
+
+  function setSvgAttr(el, name, value) {
+    if (el.getAttribute(name) !== value) el.setAttribute(name, value);
+  }
+
   function drawWaves(current) {
     const wrap = boardEl.parentElement;
-    const width = wrap.clientWidth;
-    const height = wrap.clientHeight;
-    waveLayer.setAttribute("viewBox", `0 0 ${width} ${height}`);
-    waveLayer.setAttribute("width", String(width));
-    waveLayer.setAttribute("height", String(height));
-    waveLayer.replaceChildren();
+    const width = String(wrap.clientWidth);
+    const height = String(wrap.clientHeight);
+    setSvgAttr(waveLayer, "viewBox", `0 0 ${width} ${height}`);
+    setSvgAttr(waveLayer, "width", width);
+    setSvgAttr(waveLayer, "height", height);
 
     const ns = "http://www.w3.org/2000/svg";
+    const seen = new Set();
 
-    function addPair(a, b, pair) {
-      const line = document.createElementNS(ns, "path");
-      line.setAttribute("d", `M ${a.x} ${a.y} L ${b.x} ${b.y}`);
-      line.setAttribute(
-        "class",
-        `wave ${pair.resonance ? `f${pair.freqA}` : "noise"}`
-      );
-      waveLayer.appendChild(line);
+    function upsertPair(id, a, b, pair) {
+      seen.add(id);
+      const kind = pair.resonance ? "good" : "bad";
+      const waveClass = `wave ${pair.resonance ? `f${pair.freqA}` : "noise"}`;
+      const midX = String((a.x + b.x) / 2);
+      const midY = String((a.y + b.y) / 2);
+      const d = `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
 
-      const midX = (a.x + b.x) / 2;
-      const midY = (a.y + b.y) / 2;
+      let group = waveLayer.querySelector(`[data-wave="${id}"]`);
+      if (!group) {
+        group = document.createElementNS(ns, "g");
+        group.setAttribute("data-wave", id);
 
-      const glow = document.createElementNS(ns, "circle");
-      glow.setAttribute("cx", String(midX));
-      glow.setAttribute("cy", String(midY));
-      glow.setAttribute("r", pair.resonance ? "11" : "8");
-      glow.setAttribute("class", `flash-bg ${pair.resonance ? "good" : "bad"}`);
-      waveLayer.appendChild(glow);
+        const line = document.createElementNS(ns, "path");
+        group.appendChild(line);
 
-      const flash = document.createElementNS(ns, "text");
-      flash.setAttribute("x", String(midX));
-      flash.setAttribute("y", String(midY));
-      flash.setAttribute("text-anchor", "middle");
-      flash.setAttribute("dominant-baseline", "middle");
-      flash.setAttribute("class", `flash ${pair.resonance ? "good" : "bad"}`);
-      flash.textContent = pair.resonance ? "♥" : "~";
-      waveLayer.appendChild(flash);
+        const glow = document.createElementNS(ns, "circle");
+        group.appendChild(glow);
+
+        const flash = document.createElementNS(ns, "text");
+        flash.setAttribute("text-anchor", "middle");
+        flash.setAttribute("dominant-baseline", "middle");
+        group.appendChild(flash);
+
+        waveLayer.appendChild(group);
+      }
+
+      const line = group.children[0];
+      const glow = group.children[1];
+      const flash = group.children[2];
+
+      setSvgAttr(line, "d", d);
+      if (line.getAttribute("class") !== waveClass) {
+        line.setAttribute("class", waveClass);
+      }
+      setSvgAttr(glow, "cx", midX);
+      setSvgAttr(glow, "cy", midY);
+      setSvgAttr(glow, "r", pair.resonance ? "11" : "8");
+      setSvgAttr(glow, "class", `flash-bg ${kind}`);
+      setSvgAttr(flash, "x", midX);
+      setSvgAttr(flash, "y", midY);
+      setSvgAttr(flash, "class", `flash ${kind}`);
+      if (flash.textContent !== (pair.resonance ? "♥" : "~")) {
+        flash.textContent = pair.resonance ? "♥" : "~";
+      }
     }
 
     current.rowPairs.forEach((pair) => {
-      addPair(cellCenter(pair.x1, pair.y), cellCenter(pair.x2, pair.y), pair);
+      upsertPair(
+        `r:${pair.y}:${pair.x1}:${pair.x2}`,
+        cellCenter(pair.x1, pair.y),
+        cellCenter(pair.x2, pair.y),
+        pair
+      );
     });
     current.colPairs.forEach((pair) => {
-      addPair(cellCenter(pair.x, pair.y1), cellCenter(pair.x, pair.y2), pair);
+      upsertPair(
+        `c:${pair.x}:${pair.y1}:${pair.y2}`,
+        cellCenter(pair.x, pair.y1),
+        cellCenter(pair.x, pair.y2),
+        pair
+      );
     });
+
+    [...waveLayer.children].forEach((el) => {
+      if (!seen.has(el.getAttribute("data-wave"))) el.remove();
+    });
+
+    applyWaveOffset();
+    startWaveClock();
   }
 
   function spawnPulse(x, y, freq) {
@@ -300,7 +477,7 @@
 
   function onCellClick(x, y) {
     if (solved || locked.has(key(x, y))) return;
-    grid[y][x] = (grid[y][x] + 1) % 4;
+    grid[y][x] = (grid[y][x] + 1) % (maxFreq + 1);
     const freq = grid[y][x];
     statusEl.className = "status";
     statusEl.textContent = "";
@@ -312,12 +489,18 @@
     levelIndex = (index + LEVELS.length) % LEVELS.length;
     const level = LEVELS[levelIndex];
     size = level.size;
+    maxFreq = level.maxFreq || 3;
     walls = wallSetFrom(level);
     grid = emptyGrid(size);
     solution = level.solution.map((row) => row.slice());
     locked = new Set();
+    (level.givens || []).forEach(({ x, y, freq }) => {
+      grid[y][x] = freq;
+      locked.add(key(x, y));
+    });
     target = analyze(solution, walls, size);
     solved = false;
+    prevScores = null;
     setSolvedUi(false);
     winOverlay.classList.add("hidden");
     statusEl.className = "status";
@@ -330,18 +513,16 @@
     const current = analyze(grid, walls, size);
     boardEl.querySelectorAll(".clue").forEach((el) => el.classList.remove("mismatch"));
 
-    const clues = [...boardEl.querySelectorAll(".clue")];
-    const colClues = clues.slice(0, size);
-    const rowClues = clues.slice(size);
-
     let any = false;
-    colClues.forEach((el, x) => {
+    boardEl.querySelectorAll(".clue[data-col]").forEach((el) => {
+      const x = Number(el.dataset.col);
       if (current.cols[x] !== target.cols[x]) {
         el.classList.add("mismatch");
         any = true;
       }
     });
-    rowClues.forEach((el, y) => {
+    boardEl.querySelectorAll(".clue[data-row]").forEach((el) => {
+      const y = Number(el.dataset.row);
       if (current.rows[y] !== target.rows[y]) {
         el.classList.add("mismatch");
         any = true;
@@ -423,9 +604,14 @@
     loadLevel(levelIndex + 1);
   });
 
+  let resizeTimer = 0;
   window.addEventListener("resize", () => {
-    if (size) drawWaves(analyze(grid, walls, size));
+    clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      if (size) drawWaves(analyze(grid, walls, size));
+    }, 50);
   });
 
   loadLevel(0);
+  welcomeDialog.showModal();
 })();
