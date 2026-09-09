@@ -1,134 +1,134 @@
-# Поляна жирафов — питч для продюсера и издателя
+# Giraffe Meadow — pitch for a producer and publisher
 
-**Selling point:** логический пазл, в котором игрок ищет не цифры и не объекты, а **дружбу между жирафами** — и видит эти взгляды прямо на поляне.
+**Selling point:** a logic puzzle where the player is looking not for digits or objects, but for **friendship between giraffes** — and sees those gazes right on the meadow.
 
-Документ описывает, чем игра отличается от гибридов «судоку + X», что уже собрано в web-прототипе, какие поляны открывают контент на год вперёд и куда без вреда для правил встраиваются реклама и платежи.
+This document covers how the game differs from “Sudoku + X” hybrids, what the web prototype already has, which meadows unlock a year of content, and where ads and payments can sit without hurting the rules.
 
-## Позиция на рынке
+## Market position
 
-Успешные логические хиты последних лет чаще всего склеивают знакомые механики: Train Tracks ≈ судоку + сеть путей, ColorSweeper ≈ сапёр + нонограмма. Это понятный рост сегмента, но стор уже заполнен такими гибридами.
+Successful logic hits of recent years usually glue familiar mechanics together: Train Tracks ≈ Sudoku + a path network, ColorSweeper ≈ Minesweeper + nonogram. That is a clear way the segment grows, but the store is already full of those hybrids.
 
-Поляна жирафов продаёт **новый тип информации на поле**. Числа по краям — не сумма ростов и не количество животных. Это счётчик дружбы: совпадение роста у тех, кто видит друг друга. Игрок восстанавливает сеть отношений: кто на кого смотрит.
+Giraffe Meadow sells a **new kind of information on the board**. The edge numbers are not a sum of heights and not a count of animals. They are a friendship counter: matching height among those who can see each other. The player reconstructs a network of relationships: who is looking at whom.
 
-| Игра | Что ищет игрок |
+| Game | What the player looks for |
 | --- | --- |
-| Sudoku | Цифры |
-| Minesweeper | Бомбы |
-| Train Tracks | Путь |
-| Поляна жирафов | Отношения между животными |
+| Sudoku | Digits |
+| Minesweeper | Bombs |
+| Train Tracks | A path |
+| Giraffe Meadow | Relationships between animals |
 
-Визуально это читается за секунды на скриншоте: взгляды по строкам и столбцам, сердечко `♥` при дружбе, `~` при растерянности. Игрок не «решает таблицу», а смотрит на живую поляну. Правила при этом короткие и полностью детерминированные — без случайности в решении.
+Visually this reads in seconds on a screenshot: gazes along rows and columns, a heart `♥` for friendship, `~` for confusion. The player is not “solving a table”, they are looking at a living meadow. The rules are still short and fully deterministic — no randomness in the solution.
 
-Картинка милая и «звериная», логика взрослая. Это даёт CTR casual-аудитории без упрощения пазла до match-3.
+The picture is cute and animal-led; the logic is adult. That gives casual-audience CTR without flattening the puzzle into match-3.
 
-**Meta лёгкая**, в духе Train Tracks / ColorSweeper: прогресс через поляны, без города, фермы и героев вокруг сетки.
+**Meta is light**, in the spirit of Train Tracks / ColorSweeper: progress through meadows, with no city, farm, or heroes around the grid.
 
 ```text
-Решил уровень
-    → получил открытку поляны
-    → открыл новую поляну
-    → получил новые правила
+Solved a level
+    → received a meadow postcard
+    → unlocked a new meadow
+    → received new rules
 ```
 
-Жирафы — стартовый скин и лицо стора. Правила не привязаны к виду: ту же сетку можно показать зайцами, котами или пингвинами. Это косметика, не новая механика, и отдельный IAP (см. ниже).
+Giraffes are the starting skin and the store face. The rules are not tied to the species: the same grid can be shown with rabbits, cats, or penguins. That is cosmetics, not a new mechanic, and a separate IAP (see below).
 
-## Что уже есть (поляны 1–2)
+## What already exists (meadows 1–2)
 
-Web-прототип на HTML/CSS/JS, пригодный для GitHub Pages и быстрых демо.
+A web prototype in HTML/CSS/JS, suitable for GitHub Pages and fast demos.
 
-- Поля 4×4 … 8×8.
-- Жирафы трёх ростов `1 / 2 / 3`.
-- Дружба и растерянность по линии взгляда.
-- Деревья, которые рвут взгляд.
-- Взгляды на поле постоянно, вспышки на пересечениях.
-- Проверка, подсказка, «Дальше гулять» после сборки (окно победы не перекрывает поле сразу).
-- 12 рукотворных уровней.
+- Boards 4×4 … 8×8.
+- Giraffes of three heights `1 / 2 / 3`.
+- Friendship and confusion along a line of sight.
+- Trees that break the gaze.
+- Gazes always on the board, flashes at intersections.
+- Check, hint, and **Keep walking** after a solve (the win window does not cover the board immediately).
+- 12 handcrafted levels.
 
-Этого достаточно, чтобы показать ядро: «найди дружбу по росту». Для стора ядро нужно довести до ~30 уровней JSON и перенести отрисовку взглядов на Canvas/WebGL (или Unity Web), не меняя правила.
+That is enough to show the core: “find friendship by height”. For the store, the core needs to grow to ~30 JSON levels, and gaze rendering should move to Canvas/WebGL (or Unity Web), without changing the rules.
 
-Базовые поляны **остаются бесплатными**. На них держится онбординг и органика. Стартовый скин — жирафы.
+The base meadows **stay free**. They carry onboarding and organic traffic. The starting skin is giraffes.
 
-## Дорожная карта: поляны 3–6
+## Roadmap: meadows 3–6
 
-Каждая поляна добавляет одно правило к той же сети взглядов. Контент масштабируется паками локаций, а не новыми жанрами.
+Each meadow adds one rule to the same gaze network. Content scales as location packs, not as new genres.
 
-### Поляна 3 — пруды
+### Meadow 3 — ponds
 
-Взгляд отражается от воды и меняет направление. Игрок читает ломаную сеть: дружба может сойтись не на прямой, а после одного-двух отражений. На скриншотах — изломанные взгляды, хорошо для CTR.
+A gaze reflects off water and changes direction. The player reads a bent network: friendship can meet not on a straight line, but after one or two reflections. Screenshots show broken gazes, which is good for CTR.
 
-### Поляна 4 — холмы
+### Meadow 4 — hills
 
-Клетка холма меняет силу дружбы: рост `1` считается как `2`. Вклад в краевое число растёт, появляются задачи «где поставить холм, чтобы двойка дала нужную дружбу». Это естественный скачок сложности после деревьев.
+A hill cell changes friendship strength: height `1` counts as `2`. The contribution to the edge number grows, and puzzles appear of the form “where to put a hill so a two produces the needed friendship”. That is a natural difficulty jump after trees.
 
-### Поляна 5 — семьи
+### Meadow 5 — families
 
-Взгляд проходит только через своих: разные семьи (по росту или окрасу) сосуществуют на одном поле и почти не мешают друг другу, пока игрок сам не свяжет их ошибкой. Глубокий mid-game, много уникальных решений.
+A gaze only travels through its own: different families (by height or coat) share one board and barely interfere, until the player links them by mistake. Deep mid-game, many unique solutions.
 
-### Поляна 6 — бродячие кусты
+### Meadow 6 — wandering bushes
 
-Преграды сдвигаются по тактам. Расстановка жирафов перестаёт быть статичной: нужно планировать, в какой момент взгляд пройдёт. Это late-game и повод для ежедневных прогулок.
+Obstacles shift on a beat. Placing giraffes is no longer static: you have to plan the moment when a gaze will pass. This is late-game and a reason for daily walks.
 
-После поляны 6 контент крутится на комбинациях тех же правил (пруд + семья, холм + движение) без раздувания метаигры.
+After meadow 6, content turns on combinations of the same rules (pond + family, hill + movement) without inflating the metagame.
 
-## Реклама и платежи
+## Ads and payments
 
-Модель: **бесплатная игра**, мягкий gate на удобстве и meta, не на праве решить уровень. Реклама не появляется во время хода и не рисуется поверх взгляда — иначе ломается главный вау-эффект.
+Model: a **free game**, with a soft gate on convenience and meta, not on the right to solve a level. Ads do not appear during a move and are not drawn over a gaze — that would break the main wow moment.
 
-### Где показывать рекламу
+### Where to show ads
 
-| Место | Формат | Зачем |
+| Place | Format | Why |
 | --- | --- | --- |
-| После кнопки «Дальше гулять» | Interstitial | Игрок уже посмотрел собранную поляну, переход между уровнями |
-| Вход на новую поляну | Interstitial | Редкий, «крупный» момент прогрессии |
-| Старт daily puzzle | Короткий interstitial или баннер | Ежедневный возврат |
-| По желанию игрока | Rewarded | Подсказка, пропуск, повтор открытки |
+| After the **Keep walking** button | Interstitial | The player has already looked at the finished meadow; this is a level-to-level transition |
+| Entering a new meadow | Interstitial | A rare, “big” progression moment |
+| Start of a daily puzzle | Short interstitial or banner | Daily return |
+| At the player’s choice | Rewarded | Hint, skip, postcard replay |
 
-Не ставить interstitial на первый онбординг и на каждый клик по клетке.
+Do not put an interstitial on the first onboarding or on every cell click.
 
 ### Rewarded ads
 
-Игрок сам включает ролик и получает разовую помощь:
+The player starts the video themselves and gets one-shot help:
 
-- дополнительная подсказка (как в прототипе, одна клетка из решения);
-- пропуск слишком сложного уровня с потерей «идеальной» открытки, но без тупика;
-- повтор недостающей открытки, если поляна не открылась;
-- в поляне 6 — разовый сброс такта бродячего куста.
+- an extra hint (as in the prototype, one cell from the solution);
+- a skip of an overly hard level, losing the “perfect” postcard, but without a dead end;
+- a replay of a missing postcard if the meadow did not unlock;
+- in meadow 6 — a one-shot reset of a wandering-bush beat.
 
-### Платежи (IAP)
+### Payments (IAP)
 
-- Отключение рекламы.
-- Пак подсказок (удобство, не обязательный ключ к решению).
-- Премиум-поляны: ранний доступ к локациям 4–6, пока бесплатный трек ещё на поляне 3.
-- **Скины стада.** Правила те же, меняется кто стоит на клетке. Жирафы — дефолт. За IAP можно поставить зайцев, котов, пингвинов, сезонных зверей. Это чистая косметика: рост, дружба `♥` и растерянность `~` не меняются. Хорошо выглядит в сторе («та же головоломка — другой зверь»), даёт повод для сезонных паков и не ломает честность пазла.
-- Battle pass «альбом полян»: косметика, открытки локаций и иногда новый скин за ежедневную игру, без pay-to-win правил.
+- Remove ads.
+- A hint pack (convenience, not a required key to the solution).
+- Premium meadows: early access to locations 4–6 while the free track is still on meadow 3.
+- **Herd skins.** The rules stay the same; who stands on a cell changes. Giraffes are the default. For IAP you can put rabbits, cats, penguins, seasonal animals. Pure cosmetics: height, friendship `♥`, and confusion `~` do not change. It looks good in the store (“the same puzzle — a different animal”), gives a reason for seasonal packs, and does not break puzzle fairness.
+- Battle pass “meadow album”: cosmetics, location postcards, and sometimes a new skin for daily play, with no pay-to-win rules.
 
-Миры 1–2 и базовые правила новых полян не уводятся за paywall. Премиум ускоряет доступ к локациям, но не продаёт «правильный ответ». Стартовые жирафы остаются бесплатными навсегда: платный скин — желание, не gate.
+Worlds 1–2 and the base rules of new meadows are not put behind a paywall. Premium speeds up access to locations, but does not sell “the right answer”. Starting giraffes stay free forever: a paid skin is a want, not a gate.
 
-#### Почему скины — отдельный столбец выручки
+#### Why skins are a separate revenue column
 
-Логика поляны не зависит от жирафа. Достаточно сменить спрайты и палитру, чтобы получить «Поляну зайцев» без нового контента уровней. Это:
+Meadow logic does not depend on the giraffe. Swap sprites and palette, and you get “Rabbit Meadow” without new level content. That is:
 
-- низкая стоимость производства относительно пака уровней;
-- понятная витрина в сторе и в самой игре (превью сетки до покупки);
-- live-ops без раздувания правил: Пасха — зайцы, зима — пингвины, ночь — совы;
-- подарок и коллекционирование в battle pass, не pay-to-win.
+- low production cost relative to a level pack;
+- a clear storefront in the store and in the game (grid preview before purchase);
+- live-ops without inflating the rules: Easter — rabbits, winter — penguins, night — owls;
+- gifts and collecting in a battle pass, not pay-to-win.
 
-Продавать можно паками (зайцы / коты / пингвины) и бандлом «весь зоопарк». Один скин применяется ко всей игре или выбирается на поляну — на выбор продукта, на правила не влияет.
+You can sell packs (rabbits / cats / penguins) and a “whole zoo” bundle. One skin applies to the whole game or is chosen per meadow — a product choice; it does not affect the rules.
 
-### Чего не делать
+### What not to do
 
-- Реклама поверх анимации взгляда.
-- Уровни, которые нельзя пройти без купленной или rewarded-подсказки.
-- Платный доступ к самим правилам дружбы.
-- Платный единственный скин: жирафы должны остаться бесплатным лицом игры.
-- Город / ферма / герои как обёртка над сеткой — это размывает скриншот. Животные живут **на клетках**, а не в отдельном зоопарке вокруг пазла.
+- Ads over the gaze animation.
+- Levels that cannot be finished without a bought or rewarded hint.
+- Paid access to the friendship rules themselves.
+- A paid-only skin: giraffes must remain the free face of the game.
+- A city / farm / heroes wrapper around the grid — that blurs the screenshot. Animals live **on the cells**, not in a separate zoo around the puzzle.
 
-## Рекомендация по продукту
+## Product recommendation
 
-1. Дожать web/Unity MVP: 30 уровней полян 1–2, постоянные взгляды, читаемый скриншот стора с жирафами.
-2. Выпускать поляны пакетами: деревья → пруды → холмы → семьи → бродячие кусты.
-3. Монетизацию включать со второй поляны: interstitial после «Дальше гулять», rewarded-подсказка, IAP «без рекламы».
-4. Первый косметический IAP — пак зайцев: тот же прототип, другие спрайты, проверка что скин продаётся без путаницы в правилах.
-5. Daily puzzle и альбом полян — после того, как ядро уже удерживает сессию без давления.
+1. Finish a web/Unity MVP: 30 levels of meadows 1–2, persistent gazes, a readable store screenshot with giraffes.
+2. Ship meadows in packs: trees → ponds → hills → families → wandering bushes.
+3. Turn monetization on from the second meadow: interstitial after **Keep walking**, rewarded hint, IAP “remove ads”.
+4. First cosmetic IAP — a rabbit pack: the same prototype, different sprites, a check that the skin sells without confusing the rules.
+5. Daily puzzle and meadow album — after the core already holds a session without pressure.
 
-Игра выглядит свежо именно пока на поле видно, кто на кого смотрит. Всё, что это закрывает (оверлеи, баннеры на сетке, лишняя meta), бьёт по CTR и по ощущению жанра. Скин меняет кто стоит на клетке — не то, как читается дружба.
+The game looks fresh specifically while you can see on the board who is looking at whom. Anything that covers that (overlays, banners on the grid, extra meta) hits CTR and the genre feel. A skin changes who stands on a cell — not how friendship is read.

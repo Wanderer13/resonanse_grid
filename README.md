@@ -1,56 +1,56 @@
-# Поляна жирафов
+# Giraffe Meadow
 
-Логический пазл на сетке: игрок **ищет дружбу между жирафами**, а не заполняет цифры и не считает объекты.
+A grid logic puzzle: the player **looks for friendship between giraffes**, instead of filling in digits or counting objects.
 
-На поле расставляются жирафы трёх ростов — `1`, `2` и `3`. Каждый жираф смотрит по строке и столбцу. Задача — расставить стадо так, чтобы числа по краям совпали. Эти числа показывают не сумму взглядов и не количество жирафов, а **дружбу**: совпадение роста у тех, кто видит друг друга.
+Giraffes of three heights — `1`, `2`, and `3` — are placed on the board. Each giraffe looks along its row and column. The task is to arrange the herd so the numbers along the edges match. Those numbers are not a sum of gazes and not a giraffe count. They show **friendship**: matching height between those who can see each other.
 
-## Зачем так
+## Why this
 
-В судоку ищут цифры. В сапёре — бомбы. В Train Tracks — путь. Здесь нужно понять **отношения** между жирафами: кто с кем дружит, а кто только растерянно смотрит мимо.
+In Sudoku you look for digits. In Minesweeper, bombs. In Train Tracks, a path. Here you have to understand **relationships** between giraffes: who is friends with whom, and who is only looking past someone in confusion.
 
-Взгляды на поле видны всегда. После хода видно, что именно изменилось на поляне.
+Gazes are always visible on the board. After a move, you can see exactly what changed in the meadow.
 
-## Как найти дружбу
+## How to find friendship
 
-Два жирафа взаимодействуют, если между ними по строке или столбцу нет другого жирафа и нет дерева.
+Two giraffes interact if there is no other giraffe and no tree between them on the same row or column.
 
-- Одинаковый рост — **дружба** `♥`. Считается **пара из двух жирафов**, в число идёт этот рост: две `1` → `1`, две `2` → `2`, две `3` → `3`.
-- Три тройки на одной линии — это уже две пары (`3 + 3 = 6`), а не ответ «3». Число на краю не равно количеству клеток.
-- Разный рост — **растерянность** `~`. Мягкий путь не ошибка: растерянность в число не входит.
-- Дерево обрывает взгляд: `1 → 🌳 → X`.
+- Matching height — **friendship** `♥`. It counts as a **pair of two giraffes**, and that height goes into the number: two `1`s → `1`, two `2`s → `2`, two `3`s → `3`.
+- Three threes on one line are already two pairs (`3 + 3 = 6`), not an answer of “3”. The edge number is not a cell count.
+- Different height — **confusion** `~`. A soft miss, not a mistake: confusion does not count toward the number.
+- A tree breaks the gaze: `1 → 🌳 → X`.
 
-Числа сверху относятся к столбцам, слева — к строкам. Розовая подсказка уже совпала с текущим стадом.
+Numbers on top belong to columns, numbers on the left belong to rows. A pink clue already matches the current herd.
 
-Пример: две двойки без преграды — одна дружба силы `2`. Третья двойка на той же линии добавит ещё одну пару, и число станет `4`. Если вместо этого «видит» их единица, появится растерянность, но число от неё не вырастет.
+Example: two twos with no obstacle — one friendship of strength `2`. A third two on the same line adds another pair, and the number becomes `4`. If a one “sees” them instead, confusion appears, but the number does not grow from it.
 
-Победа — когда **все** краевые числа совпали. Расположение жирафов при этом можно восстановить логикой: какие росты вообще способны дать такое число, где взгляд обязан быть разорван деревом, где два жирафа должны смотреть друг на друга.
+You win when **all** edge numbers match. The giraffe layout can be recovered by logic: which heights can even produce that number, where a gaze must be broken by a tree, and where two giraffes must look at each other.
 
-## Как играть
+## How to play
 
-1. Клик по клетке циклит состояние: пусто → `1` → `2` → `3` → пусто.
-2. Деревья заданы уровнем и не меняются.
-3. **Проверить** подсвечивает несовпавшие числа.
-4. **Подсказка** открывает одну клетку из решения и фиксирует её.
-5. Когда стадо собрано, появляется **Дальше гулять**. Сначала можно посмотреть взгляды на готовом поле, затем перейти дальше.
+1. Clicking a cell cycles its state: empty → `1` → `2` → `3` → empty.
+2. Trees are set by the level and cannot be changed.
+3. **Check** highlights numbers that do not match.
+4. **Hint** reveals one cell from the solution and locks it.
+5. When the herd is complete, **Keep walking** appears. You can look at the gazes on the finished board first, then move on.
 
-В этом репозитории — web-прототип миров 1–2: обычные жирафы и деревья. Поля от 4×4 до 8×8, двенадцать уровней.
+This repository is a web prototype of worlds 1–2: ordinary giraffes and trees. Boards from 4×4 to 8×8, twelve levels.
 
-## Запуск
+## Run
 
-Откройте [`index.html`](index.html) в браузере или поднимите локальный сервер из папки проекта:
+Open [`index.html`](index.html) in a browser, or start a local server from the project folder:
 
 ```bash
 python -m http.server 8766
 ```
 
-Затем откройте [http://127.0.0.1:8766/](http://127.0.0.1:8766/).
+Then open [http://127.0.0.1:8766/](http://127.0.0.1:8766/).
 
-## Файлы
+## Files
 
-| Файл | Назначение |
+| File | Role |
 | --- | --- |
-| `index.html` | Разметка, правила в интерфейсе |
-| `style.css` | Милая тема, цвета роста, взгляды |
-| `game.js` | Дружба, подсказки, победа |
-| `levels.js` | Уровни (деревья и скрытое решение) |
-| `PITCH.md` | Описание для продюсера и планы развития |
+| `index.html` | Markup and in-game rules |
+| `style.css` | Cute theme, height colors, gazes |
+| `game.js` | Friendship, hints, win state |
+| `levels.js` | Levels (trees and hidden solution) |
+| `PITCH.md` | Producer brief and roadmap |

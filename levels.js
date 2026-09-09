@@ -1,13 +1,13 @@
 const LEVELS = [
   {
-    name: "Первая дружба",
+    name: "First Friendship",
     size: 4,
     walls: [],
     tutorial: true,
     maxFreq: 1,
     givens: [{ x: 0, y: 0, freq: 1 }],
-    coach: "Этот жираф роста 1 смотрит вниз по столбцу. Поставьте такого же — они подружатся.",
-    coachAfterPair: "Число 1 — сила этой пары. Лишних жирафов на поле быть не должно.",
+    coach: "This height-1 giraffe is looking down the column. Place another one — they will make friends.",
+    coachAfterPair: "The number 1 is this pair’s strength. There should be no extra giraffes on the board.",
     solution: [
       [1, 0, 0, 0],
       [0, 0, 0, 0],
@@ -16,7 +16,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Два роста",
+    name: "Two Heights",
     size: 4,
     walls: [],
     tutorial: true,
@@ -25,7 +25,7 @@ const LEVELS = [
       { x: 0, y: 0, freq: 1 },
       { x: 2, y: 0, freq: 1 }
     ],
-    coach: "Эта пара уже даёт 1. Другой рост — другая дружба: две двойки дают 2.",
+    coach: "This pair already scores 1. A different height is a different friendship: two twos score 2.",
     solution: [
       [1, 0, 1, 0],
       [0, 0, 0, 0],
@@ -34,7 +34,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Уголок",
+    name: "Corner",
     size: 4,
     walls: [],
     solution: [
@@ -45,7 +45,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Сила двойки",
+    name: "Power of Two",
     size: 5,
     walls: [],
     solution: [
@@ -57,7 +57,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Решётка",
+    name: "Lattice",
     size: 5,
     walls: [],
     solution: [
@@ -69,10 +69,10 @@ const LEVELS = [
     ]
   },
   {
-    name: "Дерево на тропе",
+    name: "Tree on the Path",
     size: 5,
     walls: [{ x: 2, y: 0 }],
-    coach: "Дерево рвёт взгляд: через 🌳 жирафы не видят друг друга.",
+    coach: "A tree breaks the gaze: giraffes cannot see each other through 🌳.",
     solution: [
       [1, 1, 0, 2, 2],
       [0, 0, 0, 0, 0],
@@ -82,7 +82,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Спрятанный взгляд",
+    name: "Hidden Gaze",
     size: 5,
     walls: [{ x: 2, y: 1 }, { x: 2, y: 3 }],
     solution: [
@@ -94,7 +94,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Три роста",
+    name: "Three Heights",
     size: 6,
     walls: [{ x: 2, y: 1 }],
     solution: [
@@ -107,7 +107,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Полянки",
+    name: "Little Meadows",
     size: 6,
     walls: [{ x: 2, y: 2 }, { x: 3, y: 2 }],
     solution: [
@@ -120,7 +120,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Длинная тропа",
+    name: "Long Path",
     size: 7,
     walls: [{ x: 3, y: 1 }, { x: 3, y: 5 }],
     solution: [
@@ -134,7 +134,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Перекрёсток троп",
+    name: "Crossroads",
     size: 7,
     walls: [{ x: 3, y: 3 }, { x: 1, y: 1 }, { x: 5, y: 5 }],
     solution: [
@@ -148,7 +148,7 @@ const LEVELS = [
     ]
   },
   {
-    name: "Большая поляна",
+    name: "Big Meadow",
     size: 8,
     walls: [
       { x: 3, y: 2 },

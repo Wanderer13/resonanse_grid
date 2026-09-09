@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Поляна жирафов</title>
+  <title>Giraffe Meadow</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -12,24 +12,24 @@
 <body>
   <div class="app">
     <header class="hero">
-      <p class="kicker">Милый логический пазл</p>
-      <h1>Поляна жирафов</h1>
+      <p class="kicker">A cute logic puzzle</p>
+      <h1>Giraffe Meadow</h1>
       <p class="pitch">
-        Расставьте жирафов так, чтобы совпали числа по краям.
-        Число — это дружба <strong>двух</strong> жирафов одного роста, а не количество клеток.
+        Place giraffes so the numbers along the edges match.
+        A number is the friendship of <strong>two</strong> giraffes of the same height, not a cell count.
       </p>
     </header>
 
     <div class="layout">
-      <section class="play" aria-label="Игровое поле">
+      <section class="play" aria-label="Game board">
         <div class="toolbar">
-          <button type="button" id="rulesBtn" class="ghost">Как играть</button>
+          <button type="button" id="rulesBtn" class="ghost">How to play</button>
           <div class="level-nav">
-            <button type="button" id="prevBtn" class="icon-btn" aria-label="Предыдущий уровень">◀</button>
-            <span id="levelLabel">Уровень 1</span>
-            <button type="button" id="nextBtn" class="icon-btn" aria-label="Следующий уровень">▶</button>
+            <button type="button" id="prevBtn" class="icon-btn" aria-label="Previous level">◀</button>
+            <span id="levelLabel">Level 1</span>
+            <button type="button" id="nextBtn" class="icon-btn" aria-label="Next level">▶</button>
           </div>
-          <button type="button" id="resetBtn" class="ghost">Заново</button>
+          <button type="button" id="resetBtn" class="ghost">Reset</button>
         </div>
 
         <p id="levelName" class="level-name"></p>
@@ -44,19 +44,19 @@
 
         <p id="coach" class="coach" role="status"></p>
 
-        <div class="legend" id="legend" aria-label="Легенда роста">
-          <span class="swatch f1" data-legend="f1"><i></i> Рост 1</span>
-          <span class="swatch f2" data-legend="f2"><i></i> Рост 2</span>
-          <span class="swatch f3" data-legend="f3"><i></i> Рост 3</span>
-          <span class="swatch wall" data-legend="wall"><i></i> Дерево</span>
-          <span class="swatch good" data-legend="good"><i></i> Дружба ♥</span>
-          <span class="swatch noise" data-legend="noise"><i></i> Растерянность ~</span>
+        <div class="legend" id="legend" aria-label="Height legend">
+          <span class="swatch f1" data-legend="f1"><i></i> Height 1</span>
+          <span class="swatch f2" data-legend="f2"><i></i> Height 2</span>
+          <span class="swatch f3" data-legend="f3"><i></i> Height 3</span>
+          <span class="swatch wall" data-legend="wall"><i></i> Tree</span>
+          <span class="swatch good" data-legend="good"><i></i> Friendship ♥</span>
+          <span class="swatch noise" data-legend="noise"><i></i> Confusion ~</span>
         </div>
 
         <div class="actions">
-          <button type="button" id="checkBtn" class="primary">Проверить</button>
-          <button type="button" id="hintBtn" class="ghost">Подсказка</button>
-          <button type="button" id="continueBtn" class="accent hidden">Дальше гулять</button>
+          <button type="button" id="checkBtn" class="primary">Check</button>
+          <button type="button" id="hintBtn" class="ghost">Hint</button>
+          <button type="button" id="continueBtn" class="accent hidden">Keep walking</button>
         </div>
         <p id="status" class="status" role="status"></p>
       </section>
@@ -64,8 +64,8 @@
   </div>
 
   <dialog id="welcomeDialog" class="dialog welcome-dialog">
-    <p class="kicker">Как найти дружбу</p>
-    <h2>Смотрите, кто на кого смотрит</h2>
+    <p class="kicker">How to find friendship</p>
+    <h2>Watch who is looking at whom</h2>
     <div class="welcome-demo" aria-hidden="true">
       <div class="welcome-board">
         <div class="clue match"><span class="clue-target">1</span></div>
@@ -90,39 +90,39 @@
       </div>
     </div>
     <p>
-      Два одинаковых жирафа видят друг друга — это дружба.
-      Число на краю — сила пары, не количество клеток.
+      Two matching giraffes see each other — that is friendship.
+      The number on the edge is the pair’s strength, not a cell count.
     </p>
     <form method="dialog">
-      <button type="submit" class="primary" autofocus>На поляну</button>
+      <button type="submit" class="primary" autofocus>To the meadow</button>
     </form>
   </dialog>
 
   <dialog id="rulesDialog" class="dialog">
-    <h2>Правила поляны</h2>
+    <h2>Meadow rules</h2>
     <p>
-      Расставьте жирафов роста 1, 2 и 3 так, чтобы совпали числа по краям.
-      Число — сумма дружбы пар на линии, а не количество жирафов.
-      Две тройки дают 3; три тройки дают 6.
+      Place giraffes of height 1, 2, and 3 so the numbers along the edges match.
+      A number is the sum of pair friendships on that line, not the number of giraffes.
+      Two threes score 3; three threes score 6.
     </p>
     <ul>
-      <li>Два одинаковых роста на линии взгляда: дружба, вклад равен росту.</li>
-      <li>Разный рост: растерянность ~. Это не ошибка, в число не входит.</li>
-      <li>Дерево обрывает взгляд.</li>
-      <li>Клик циклит клетку: пусто → 1 → 2 → 3 → пусто.</li>
-      <li>Кнопка «Подсказка» открывает одну клетку из решения.</li>
+      <li>Two matching heights on a line of sight: friendship, worth that height.</li>
+      <li>Different heights: confusion ~. That is not a mistake, and it does not count.</li>
+      <li>A tree breaks the gaze.</li>
+      <li>Click cycles a cell: empty → 1 → 2 → 3 → empty.</li>
+      <li>Hint reveals one cell from the solution.</li>
     </ul>
     <form method="dialog">
-      <button type="submit" class="primary">Понятно!</button>
+      <button type="submit" class="primary">Got it!</button>
     </form>
   </dialog>
 
   <div id="winOverlay" class="overlay hidden" role="dialog" aria-labelledby="winTitle">
     <div class="overlay-card">
-      <p class="kicker">Все смотрят куда надо</p>
-      <h2 id="winTitle">Жирафы подружились</h2>
-      <p id="winText">Все подсказки совпали.</p>
-      <button type="button" id="winNextBtn" class="primary">Дальше</button>
+      <p class="kicker">Everyone is looking the right way</p>
+      <h2 id="winTitle">The giraffes made friends</h2>
+      <p id="winText">All the clues match.</p>
+      <button type="button" id="winNextBtn" class="primary">Next</button>
     </div>
   </div>
 

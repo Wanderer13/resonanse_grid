@@ -178,9 +178,9 @@
 
   function clickHint(level) {
     const cap = level.maxFreq || 3;
-    if (cap <= 1) return "Клик ставит или убирает жирафа роста 1.";
-    if (cap === 2) return "Клик: пусто → 1 → 2 → пусто.";
-    return "Клик: пусто → 1 → 2 → 3 → пусто.";
+    if (cap <= 1) return "Click to place or remove a height-1 giraffe.";
+    if (cap === 2) return "Click: empty → 1 → 2 → empty.";
+    return "Click: empty → 1 → 2 → 3 → empty.";
   }
 
   function fillClue(el, currentValue, targetValue, { bump = false, focus = false } = {}) {
@@ -190,8 +190,8 @@
     el.setAttribute(
       "aria-label",
       match
-        ? `Подсказка ${targetValue}, совпала`
-        : `Подсказка ${targetValue}, сейчас ${currentValue}`
+        ? `Clue ${targetValue}, matched`
+        : `Clue ${targetValue}, now ${currentValue}`
     );
 
     const targetSpan = document.createElement("span");
@@ -202,7 +202,7 @@
     if (!match) {
       const now = document.createElement("span");
       now.className = "clue-now";
-      now.textContent = `сейчас ${currentValue}`;
+      now.textContent = `now ${currentValue}`;
       el.appendChild(now);
     }
 
@@ -229,7 +229,7 @@
     let text = level.coach || clickHint(level);
 
     if (matched) {
-      text = "Все смотрят куда надо.";
+      text = "Everyone is looking the right way.";
     } else if (level.tutorial) {
       const pairs = [...current.rowPairs, ...current.colPairs];
       const harmfulNoise = pairs.some((pair) => {
@@ -240,9 +240,9 @@
       const friends = pairs.some((pair) => pair.resonance);
       const extras = giraffeCount(grid) > giraffeCount(solution);
       if (harmfulNoise) {
-        text = "~ это растерянность, в число не входит. Нужен такой же рост.";
+        text = "~ is confusion; it does not count. You need the same height.";
       } else if (friends && extras) {
-        text = "Лишние тоже смотрят. Уберите их.";
+        text = "Extra giraffes are looking too. Take them off.";
       } else if (friends && level.coachAfterPair) {
         text = level.coachAfterPair;
       }
@@ -297,7 +297,7 @@
 
         if (wall) {
           cell.textContent = "🌳";
-          cell.setAttribute("aria-label", "Дерево");
+          cell.setAttribute("aria-label", "Tree");
         } else {
           const mark = document.createElement("span");
           mark.className = "giraffe" + (freq ? ` size-${freq}` : "");
@@ -314,10 +314,10 @@
           if (isLocked) {
             cell.setAttribute(
               "aria-label",
-              freq ? `Подсказка: жираф роста ${freq}` : "Подсказка: пустая клетка"
+              freq ? `Hint: height-${freq} giraffe` : "Hint: empty cell"
             );
           } else {
-            cell.setAttribute("aria-label", freq ? `Жираф роста ${freq}` : "Пустая клетка");
+            cell.setAttribute("aria-label", freq ? `Height-${freq} giraffe` : "Empty cell");
           }
           cell.addEventListener("click", () => onCellClick(x, y));
         }
@@ -327,7 +327,7 @@
     }
 
     drawWaves(current);
-    levelLabel.textContent = `Уровень ${levelIndex + 1} / ${LEVELS.length}`;
+    levelLabel.textContent = `Level ${levelIndex + 1} / ${LEVELS.length}`;
     levelName.textContent = level.name;
     updateLegend(level);
     updateCoach(current);
@@ -337,7 +337,7 @@
       if (!solved) {
         solved = true;
         statusEl.className = "status good";
-        statusEl.textContent = "Все подсказки совпали. Можно идти дальше.";
+        statusEl.textContent = "All the clues match. You can keep walking.";
       }
       setSolvedUi(true);
     } else {
@@ -531,13 +531,13 @@
 
     if (!any) {
       statusEl.className = "status good";
-      statusEl.textContent = "Все подсказки совпали. Можно идти дальше.";
+      statusEl.textContent = "All the clues match. You can keep walking.";
       setSolvedUi(true);
       return;
     }
 
     statusEl.className = "status bad";
-    statusEl.textContent = "Дружба ещё не сошлась: эти числа не совпали.";
+    statusEl.textContent = "Friendship has not lined up yet: these numbers do not match.";
   }
 
   document.getElementById("prevBtn").addEventListener("click", () => {
@@ -569,7 +569,7 @@
 
     if (!mismatches.length) {
       statusEl.className = "status good";
-      statusEl.textContent = "Все открываемые клетки уже на своих местах.";
+      statusEl.textContent = "Every open cell is already in the right place.";
       return;
     }
 
@@ -579,8 +579,8 @@
     locked.add(key(pick.x, pick.y));
     statusEl.className = "status good";
     statusEl.textContent = pick.want
-      ? `Подсказка: жираф роста ${pick.want}.`
-      : "Подсказка: эта клетка должна быть пустой.";
+      ? `Hint: a height-${pick.want} giraffe.`
+      : "Hint: this cell should be empty.";
     render();
     if (pick.want) spawnPulse(pick.x, pick.y, pick.want);
   }
@@ -588,7 +588,7 @@
   document.getElementById("checkBtn").addEventListener("click", showMismatches);
   document.getElementById("hintBtn").addEventListener("click", applyHint);
   document.getElementById("continueBtn").addEventListener("click", () => {
-    winText.textContent = `Уровень «${LEVELS[levelIndex].name}» собран. Жирафы довольны.`;
+    winText.textContent = `Level “${LEVELS[levelIndex].name}” is complete. The giraffes are happy.`;
     winOverlay.classList.remove("hidden");
   });
   document.getElementById("rulesBtn").addEventListener("click", () => {
@@ -598,7 +598,7 @@
     if (levelIndex === LEVELS.length - 1) {
       winOverlay.classList.add("hidden");
       statusEl.className = "status good";
-      statusEl.textContent = "Вся поляна собрана. Жирафы счастливы.";
+      statusEl.textContent = "The whole meadow is complete. The giraffes are happy.";
       return;
     }
     loadLevel(levelIndex + 1);
